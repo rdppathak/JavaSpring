@@ -2,9 +2,13 @@ package com.Example.CustomerJPA;
 
 import java.util.List;
 
-import org.springframework.data.repository.CrudRepository;
+import javax.transaction.Transactional;
 
+import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.jpa.repository.JpaRepository;
+
+@Transactional
 public interface CustomerRepository extends CrudRepository<Customer, Long> {
 
-    List<Customer> findByLastName(String lastName);
+//	public Customer findByDeparture(String lastName);
 }
