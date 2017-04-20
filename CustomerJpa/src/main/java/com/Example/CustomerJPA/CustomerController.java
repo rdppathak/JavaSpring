@@ -1,5 +1,7 @@
 package com.Example.CustomerJPA;
 
+import java.util.ArrayList;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -18,5 +20,18 @@ public class CustomerController {
 		customer.setLastName(lastName);
 	  customer = customerRepository.save(customer);
 	  return customer;
+	 }
+	
+	@RequestMapping("/read")
+	 public ArrayList<Customer> read(@RequestParam String lastName) {
+		ArrayList<Customer> customer = (ArrayList<Customer>) customerRepository.findByLastName(lastName);
+		if (customer.size() == 0){
+			customer = new ArrayList<Customer>();
+			System.out.println("No such customer exists");
+			return customer;
+			
+		}
+		System.out.println("Found customer "+customer.get(0).getFirstName());
+	    return customer;
 	 }
 }

@@ -21,7 +21,7 @@ public class Customer {
     @Column
     private String lastName;
 
-    protected Customer() {}
+    protected Customer() {firstName = null; lastName=null;}
 
     public Customer(String firstName, String lastName) {
         this.firstName = firstName;
