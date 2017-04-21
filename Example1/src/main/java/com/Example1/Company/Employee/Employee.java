@@ -15,9 +15,10 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 
 @Entity
-@Table(name="Employees")
+@Table(name="Employees", uniqueConstraints={@UniqueConstraint(columnNames = {"firstName", "lastName"})})
 public class Employee {
 	
 	@Id
@@ -31,6 +32,8 @@ public class Employee {
 	private int age;
 	@Column
 	private float salary;
+	@Column
+	String email;
 	
 	@OneToMany
 	@JoinTable(name = "EMP_ROLE", joinColumns = @JoinColumn(name = "EMPLOYEES_ID", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "ROLES_ID", referencedColumnName = "ID"))
@@ -43,12 +46,13 @@ public class Employee {
 	public Employee(){
 		firstName = null;
 		lastName=null;
+		email = null;
 		age=0;
 		salary=0;
 		role = new HashSet<Role>();
 		project = new HashSet<Project>();
 	}
-	
+
 	public long getId() {
 		return id;
 	}
@@ -88,8 +92,13 @@ public class Employee {
 		this.role.add(role);
 	}
 
-	public void removeRole(){
-		this.role = null;
+	public void removeRole(String title){
+		for (Role r : this.role) {
+		    if(r.getTitle()==title){
+		    	this.role.remove(r);
+		    	break;
+		    }
+		}
 	}
 	public Set<Project> getProject() {
 		return project;

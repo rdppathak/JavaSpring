@@ -81,6 +81,20 @@ public class EmployeeController {
 		return e;
 	}
 	
+	@RequestMapping("/removeRole")
+	public Employee removeEmployeeRole(@RequestParam(value="firstName") String firstName,
+					@RequestParam(value="title") String title){
+		Employee e;
+		e = employeeRepository.findByFirstName(firstName);
+		if (e == null){
+			return e;
+		}else{
+			e.removeRole(title);
+		}
+		employeeRepository.save(e);
+		return e;
+	}
+	
 	@RequestMapping("/deleteEmployee")
 	public Employee deleteEmployeeDetails(@RequestParam(value="firstName") String firstName){
 		Employee e;
@@ -88,4 +102,6 @@ public class EmployeeController {
 		employeeRepository.delete(e);
 		return null;
 	}
+	
+	
 }
