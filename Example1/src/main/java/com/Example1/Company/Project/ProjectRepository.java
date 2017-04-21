@@ -6,5 +6,5 @@ import org.springframework.data.repository.CrudRepository;
 
 @Transactional
 public interface ProjectRepository extends CrudRepository<Project, Long>{
-
+	Project findByName(String name);
 }

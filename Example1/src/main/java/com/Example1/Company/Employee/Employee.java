@@ -3,6 +3,7 @@ package com.Example1.Company.Employee;
 import com.Example1.Company.Project.Project;
 import com.Example1.Company.Role.Role;
 
+import java.util.HashSet;
 import java.util.Set;
 
 import javax.persistence.Column;
@@ -29,7 +30,7 @@ public class Employee {
 	@Column
 	private int age;
 	@Column
-	private int salary;
+	private float salary;
 	
 	@OneToMany
 	@JoinTable(name = "EMP_ROLE", joinColumns = @JoinColumn(name = "EMPLOYEES_ID", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "ROLES_ID", referencedColumnName = "ID"))
@@ -38,6 +39,15 @@ public class Employee {
 	@OneToMany
 	@JoinTable(name = "EMP_PROJECT", joinColumns = @JoinColumn(name = "EMPLOYEES_ID", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name="PROJECT_ID",  referencedColumnName = "ID"))
 	private Set<Project> project;
+	
+	public Employee(){
+		firstName = null;
+		lastName=null;
+		age=0;
+		salary=0;
+		role = new HashSet<Role>();
+		project = new HashSet<Project>();
+	}
 	
 	public long getId() {
 		return id;
@@ -63,10 +73,10 @@ public class Employee {
 	public void setAge(int age) {
 		this.age = age;
 	}
-	public int getSalary() {
+	public float getSalary() {
 		return salary;
 	}
-	public void setSalary(int salary) {
+	public void setSalary(float salary) {
 		this.salary = salary;
 	}
 	
@@ -74,15 +84,18 @@ public class Employee {
 		return role;
 	}
 	
-	public void setRole(Set<Role> role) {
-		this.role = role;
+	public void setRole(Role role) {
+		this.role.add(role);
 	}
 
+	public void removeRole(){
+		this.role = null;
+	}
 	public Set<Project> getProject() {
 		return project;
 	}
-	public void setProject(Set<Project> project) {
-		this.project = project;
+	public void setProject(Project project) {
+		this.project.add(project);
 	}
 	
 	

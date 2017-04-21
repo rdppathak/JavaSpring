@@ -13,10 +13,12 @@ public class Role {
 	@Id
     @GeneratedValue(strategy=GenerationType.AUTO)
 	private long id;
-	@Column
+	@Column(unique=true)
 	private String title;
 	@Column
 	private String description;
+	
+	public Role(){}
 	
 	public Role(String title, String description){
 		this.title = title;

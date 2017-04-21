@@ -13,10 +13,14 @@ public class Project {
 	@Id
     @GeneratedValue(strategy=GenerationType.AUTO)
 	private long id;
-	@Column
+	@Column(unique=true)
 	private String name;
 	@Column
 	private String description;
+	
+	public Project(){
+		
+	}
 	
 	public Project(String name, String description){
 		this.name = name;

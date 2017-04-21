@@ -20,37 +20,8 @@ import com.Example1.Company.Role.RoleRepository;
 
 
 @SpringBootApplication
-public class Example1Application {
-	
-//	@Autowired
-//    private EmployeeRepository employeeRepository;
-	
+public class Example1Application {	
 	public static void main(String[] args) {
 		SpringApplication.run(Example1Application.class);
 	}
-	
-	@Bean
-	public CommandLineRunner demo(EmployeeRepository er, RoleRepository rr, ProjectRepository pr) {
-		return (args) -> {
-			System.out.println("Creating Employee entry");
-	        Employee e = new Employee();
-	        Role r = new Role("Software Engineer", "Programming");
-	        Project p = new Project("Mindsphere", "IOT Platform");
-	        
-	        pr.save(p);
-	        rr.save(r);
-	        e.setFirstName("john");
-	        e.setLastName("quest");
-	        
-	        Set<Role> sr = new HashSet<Role>();
-	        Set<Project> sp= new HashSet<Project>();
-	        sp.add(p);
-	        sr.add(r);
-	        e.setRole(sr);
-	        e.setProject(sp);
-	        er.save(e);	        
-			Thread.sleep(10);
-		};
-        
-    }
 }
