@@ -1,5 +1,6 @@
 package com.Example1.Company.Project;
 
+import javax.persistence.AttributeOverride;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -12,6 +13,7 @@ import javax.persistence.Table;
 public class Project {
 	@Id
     @GeneratedValue(strategy=GenerationType.AUTO)
+	@Column(name="PROJECT_ID")
 	private long id;
 	@Column(unique=true)
 	private String name;

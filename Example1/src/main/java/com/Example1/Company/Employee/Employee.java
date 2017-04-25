@@ -6,13 +6,17 @@ import com.Example1.Company.Role.Role;
 import java.util.HashSet;
 import java.util.Set;
 
+import javax.persistence.AttributeOverride;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
@@ -31,18 +35,26 @@ public class Employee {
 	@Column
 	private int age;
 	@Column
-	private float salary;
+	private double salary;
 	@Column
 	String email;
 	
-	@OneToMany
-	@JoinTable(name = "EMP_ROLE", joinColumns = @JoinColumn(name = "EMPLOYEES_ID", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "ROLES_ID", referencedColumnName = "ID"))
+	@ManyToMany(targetEntity=Role.class, cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	@JoinTable(name = "EMP_ROLE", joinColumns = @JoinColumn(name = "EMPLOYEE_ID"), inverseJoinColumns = @JoinColumn(name = "ROLE_ID"))
 	private Set<Role> role;
 	
-	@OneToMany
-	@JoinTable(name = "EMP_PROJECT", joinColumns = @JoinColumn(name = "EMPLOYEES_ID", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name="PROJECT_ID",  referencedColumnName = "ID"))
+	@ManyToMany(targetEntity=Project.class, cascade = CascadeType.ALL)
+	@JoinTable(name = "EMP_DEPARTMENT", joinColumns = @JoinColumn(name = "EMPLOYEE_ID"), inverseJoinColumns = @JoinColumn(name="PROJECT_ID"))
 	private Set<Project> project;
 	
+	public String getEmail() {
+		return email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
+	}
+
 	public Employee(){
 		firstName = null;
 		lastName=null;
@@ -77,10 +89,10 @@ public class Employee {
 	public void setAge(int age) {
 		this.age = age;
 	}
-	public float getSalary() {
+	public double getSalary() {
 		return salary;
 	}
-	public void setSalary(float salary) {
+	public void setSalary(double salary) {
 		this.salary = salary;
 	}
 	
@@ -89,6 +101,9 @@ public class Employee {
 	}
 	
 	public void setRole(Role role) {
+		if(this.role==null){
+			this.role = new HashSet<Role>();
+		}
 		this.role.add(role);
 	}
 

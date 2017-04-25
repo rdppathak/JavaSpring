@@ -1,5 +1,6 @@
 package com.Example1.Company.Employee;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -7,6 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
+import com.Example1.Company.Employee.*;
 
 import com.Example1.Company.Project.Project;
 import com.Example1.Company.Project.ProjectRepository;
@@ -22,11 +25,12 @@ public class EmployeeController {
 	RoleRepository roleRepository;
 	
 	@Autowired
-	ProjectRepository projRepository;
+	ProjectRepository departmentRepository;
 	
 	@RequestMapping("/createEmployee")
 	public Employee create(@RequestParam(value = "firstName", defaultValue = "User") String firstName,
 			@RequestParam(value = "lastName", defaultValue = "lastName") String lastName,
+			@RequestParam(value="emailid") String emailid,
 			@RequestParam(value = "age", defaultValue = "25") int age,
 			@RequestParam(value = "salary", defaultValue = "10000") float salary) {
 		Employee employee = new Employee();
@@ -34,18 +38,19 @@ public class EmployeeController {
 		employee.setLastName(lastName);
 		employee.setAge(age);
 		employee.setSalary(salary);
+		employee.setEmail(emailid);
 		employee = employeeRepository.save(employee);
 		return employee;
 	}
 
 	@RequestMapping("/addEmployeeRole")
-	public Employee setEmployeeRole(@RequestParam(value="firstName") String firstName,
+	public void setEmployeeRole(@RequestParam(value="firstName") String firstName,
 						@RequestParam(value="title") String title,
 						@RequestParam(value="description") String description){
 		Employee e;
 		e = employeeRepository.findByFirstName(firstName);
 		if (e == null){
-			return e;
+			return ;
 		}else{
 			
 			Role r =null;
@@ -57,7 +62,19 @@ public class EmployeeController {
 			e.setRole(r);
 			employeeRepository.save(e);			
 		}
-		return e;
+	}
+	
+	@RequestMapping("/FetchEmployee")
+	public Employee FetchEmployee(@RequestParam(value="id") long id){
+		Employee employee = null;
+		employee = employeeRepository.findById(id);
+		return employee;
+	}
+	
+	@RequestMapping("/FetchAllEmployees")
+	public ArrayList FetchAllEmployees(){
+		ArrayList empList = (ArrayList) employeeRepository.findAll();
+		return empList;
 	}
 	
 	@RequestMapping("/addEmployeeProject")
@@ -70,11 +87,11 @@ public class EmployeeController {
 			return e;
 		}else{
 			Project p = null;
-			p = projRepository.findByName(projName);
+			p = departmentRepository.findByName(projName);
 			if (p==null){
 				p = new Project(projName, description);
 			}
-			projRepository.save(p);
+			departmentRepository.save(p);
 			e.setProject(p);
 			employeeRepository.save(e);			
 		}
