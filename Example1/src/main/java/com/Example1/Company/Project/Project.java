@@ -7,14 +7,18 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.transaction.Transactional;
+
+import org.hibernate.annotations.Proxy;
 
 @Entity
 @Table(name="projects")
+@Proxy(lazy=false)
+@Transactional
 public class Project {
 	@Id
     @GeneratedValue(strategy=GenerationType.AUTO)
-	@Column(name="PROJECT_ID")
-	private long id;
+	private long projectId;
 	@Column(unique=true)
 	private String name;
 	@Column
@@ -30,10 +34,10 @@ public class Project {
 	}
 	
 	public long getId() {
-		return id;
+		return projectId;
 	}
 	public void setId(long id) {
-		this.id = id;
+		this.projectId = id;
 	}
 	public String getName() {
 		return name;

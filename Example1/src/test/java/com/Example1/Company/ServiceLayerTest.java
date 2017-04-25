@@ -1,5 +1,7 @@
 package com.Example1.Company;
 
+import javax.transaction.Transactional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.testng.AbstractTestNGSpringContextTests;
@@ -9,6 +11,8 @@ import org.testng.annotations.Test;
 
 import com.Example1.Company.Employee.Employee;
 import com.Example1.Company.Employee.EmployeeRepository;
+import com.Example1.Company.Project.Project;
+import com.Example1.Company.Project.ProjectRepository;
 import com.Example1.Company.Role.Role;
 import com.Example1.Company.Role.RoleRepository;
 import com.Example1.Company.Example1Application;
@@ -20,6 +24,9 @@ public class ServiceLayerTest extends AbstractTestNGSpringContextTests{
 	private EmployeeRepository employeeRepository;
 	@Autowired
 	private RoleRepository roleRepository;
+	@Autowired
+	private ProjectRepository projectRepository;
+	
 	
 	private long id = 1;
 	private String firstName = "John";
@@ -27,6 +34,13 @@ public class ServiceLayerTest extends AbstractTestNGSpringContextTests{
 	private String emailid = "john.quest@gmail.com";
 	private int age = 29;
 	private double salary = 2000.0;
+	
+	private String projectName = "Engineering";
+	private String projectDescription = "MindsphereIOT";
+	
+	private String roleTitle = "Software Engineer";
+	private String roleDescription = "Programming";
+	
 	
 	@Test(priority=1)
 	public void testCreateEmployee() {
@@ -46,28 +60,53 @@ public class ServiceLayerTest extends AbstractTestNGSpringContextTests{
 	@Test(priority=2, dependsOnMethods={"testCreateEmployee"})
 	public void testFetchEmployee(){
 		Employee e;
-		e = employeeRepository.findById(id);
+		e = employeeRepository.findByEmpId(id);
 		Assert.assertEquals(e.getId(), id);
 	}
 	
 	@Test(priority=2, dependsOnMethods={"testCreateEmployee"})
 	public void testAddRoleForEmployee(){
-		Employee e = employeeRepository.findById(id);
-		Role r = new Role("Software Engineer", "Programming");
-		e.setRole(r);
+		
+		Role r = new Role(roleTitle, roleDescription);
 		roleRepository.save(r);
+		Employee e = employeeRepository.findByEmpId(id);
+		e.setRole(r);
 		employeeRepository.save(e);
 		Assert.assertNotEquals(r, null);
 	}
 	
-	@Test(priority=4, dependsOnMethods={"testCreateEmployee", "testAddRoleForEmployee"})
+	@Test(priority=3, dependsOnMethods={"testCreateEmployee"})
+	public void testAddProjectForEmployee(){
+		Project p = new Project(projectName, projectDescription);
+		projectRepository.save(p);
+		Employee e = employeeRepository.findByEmpId(id);
+		e.setProject(p);
+		employeeRepository.save(e);
+	}
+	
+	@Test(priority=3, dependsOnMethods={"testAddRoleForEmployee"})
+	public void testRemoveRoleForEmployee(){
+		Employee e = employeeRepository.findByEmpId(id);
+		e.removeRole(roleTitle);
+		employeeRepository.save(e);
+		e = employeeRepository.findByEmpId(id);
+	}
+	
+	@Test(priority=3, dependsOnMethods={"testAddProjectForEmployee"})
+	public void testRemoveProjectForEmployee(){
+		Employee e = employeeRepository.findByEmpId(id);
+		e.removeProject(projectName);
+		employeeRepository.save(e);
+	}
+	
+	@Test(priority=4, dependsOnMethods={"testRemoveRoleForEmployee", "testRemoveProjectForEmployee"})
 	public void deleteEmployee(){
 		Employee e;
-		e = employeeRepository.findById(id);
+		e = employeeRepository.findByEmpId(id);
 		employeeRepository.delete(e);
 		
 		Assert.assertEquals(e.getId(), id);
-		e = employeeRepository.findById(id);
+		e = employeeRepository.findByEmpId(id);
 		Assert.assertEquals(e, null);
 	}
 }

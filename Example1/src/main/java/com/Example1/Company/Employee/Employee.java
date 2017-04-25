@@ -20,14 +20,19 @@ import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
+import javax.transaction.Transactional;
+
+import org.hibernate.annotations.Proxy;
 
 @Entity
 @Table(name="Employees", uniqueConstraints={@UniqueConstraint(columnNames = {"firstName", "lastName"})})
+@Proxy(lazy=false)
+@Transactional
 public class Employee {
 	
 	@Id
     @GeneratedValue(strategy=GenerationType.AUTO)
-	private long id;
+	private long empId;
 	@Column
 	private String firstName;
 	@Column
@@ -39,12 +44,12 @@ public class Employee {
 	@Column
 	String email;
 	
-	@ManyToMany(targetEntity=Role.class, cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-	@JoinTable(name = "EMP_ROLE", joinColumns = @JoinColumn(name = "EMPLOYEE_ID"), inverseJoinColumns = @JoinColumn(name = "ROLE_ID"))
+	@ManyToMany(targetEntity=Role.class, cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	@JoinTable(name = "EMP_ROLE", joinColumns = @JoinColumn(name="empId"), inverseJoinColumns = @JoinColumn(name = "roleId"))
 	private Set<Role> role;
 	
-	@ManyToMany(targetEntity=Project.class, cascade = CascadeType.ALL)
-	@JoinTable(name = "EMP_DEPARTMENT", joinColumns = @JoinColumn(name = "EMPLOYEE_ID"), inverseJoinColumns = @JoinColumn(name="PROJECT_ID"))
+	@ManyToMany(targetEntity=Project.class, cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	@JoinTable(name = "EMP_PROJECT", joinColumns = @JoinColumn(name = "empId"), inverseJoinColumns = @JoinColumn(name="projectId"))
 	private Set<Project> project;
 	
 	public String getEmail() {
@@ -66,10 +71,10 @@ public class Employee {
 	}
 
 	public long getId() {
-		return id;
+		return empId;
 	}
 	public void setId(long id) {
-		this.id = id;
+		this.empId = id;
 	}
 	public String getFirstName() {
 		return firstName;
@@ -108,11 +113,15 @@ public class Employee {
 	}
 
 	public void removeRole(String title){
-		for (Role r : this.role) {
-		    if(r.getTitle()==title){
-		    	this.role.remove(r);
+		Role r = null;
+		for (Role rr : this.role) {
+		    if(rr.getTitle().equals(title)){
+		    	r = rr;
 		    	break;
 		    }
+		}
+		if(r != null){
+			this.role.remove(r);
 		}
 	}
 	public Set<Project> getProject() {
@@ -120,6 +129,21 @@ public class Employee {
 	}
 	public void setProject(Project project) {
 		this.project.add(project);
+	}
+	
+	public void removeProject(String projectName){
+		for(Project p: this.project){
+			if(p.getName().equals(projectName)){
+				this.project.remove(p);
+				break;
+			}
+		}
+	}
+
+	@Override
+	public String toString() {
+		return "Employee [empId=" + empId + ", firstName=" + firstName + ", lastName=" + lastName + ", age=" + age
+				+ ", salary=" + salary + ", email=" + email + ", role=" + role + ", project=" + project + "]";
 	}
 	
 	

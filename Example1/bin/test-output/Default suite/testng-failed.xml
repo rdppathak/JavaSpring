@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
+<suite guice-stage="DEVELOPMENT" name="Failed suite [Default suite]">
+  <test name="Default test(failed)">
+    <classes>
+      <class name="com.Example1.Company.ServiceLayerTest">
+        <methods>
+          <include name="testFetchEmployee"/>
+          <include name="springTestContextBeforeTestClass"/>
+          <include name="testAddRoleForEmployee"/>
+          <include name="deleteEmployee"/>
+          <include name="springTestContextPrepareTestInstance"/>
+          <include name="springTestContextAfterTestClass"/>
+          <include name="springTestContextBeforeTestMethod"/>
+          <include name="springTestContextAfterTestMethod"/>
+          <include name="testCreateEmployee"/>
+        </methods>
+      </class> <!-- com.Example1.Company.ServiceLayerTest -->
+    </classes>
+  </test> <!-- Default test(failed) -->
+</suite> <!-- Failed suite [Default suite] -->

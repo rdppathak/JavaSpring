@@ -7,14 +7,18 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.transaction.Transactional;
+
+import org.hibernate.annotations.Proxy;
 
 @Entity
 @Table(name="roles")
+@Proxy(lazy=false)
+@Transactional
 public class Role {
 	@Id
     @GeneratedValue(strategy=GenerationType.AUTO)
-	@Column(name="ROLE_ID")
-	private long id;
+	private long roleId;
 	@Column(unique=true)
 	private String title;
 	@Column
@@ -27,10 +31,10 @@ public class Role {
 		this.description = description;
 	}
 	public long getId() {
-		return id;
+		return roleId;
 	}
 	public void setId(long id) {
-		this.id = id;
+		this.roleId = id;
 	}
 	public String getTitle() {
 		return title;

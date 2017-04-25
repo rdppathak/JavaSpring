@@ -15,6 +15,7 @@ import com.Example1.Company.Project.Project;
 import com.Example1.Company.Project.ProjectRepository;
 import com.Example1.Company.Role.Role;
 import com.Example1.Company.Role.RoleRepository;
+import com.Example1.Company.Role.RoleService;
 
 @RestController
 public class EmployeeController {
@@ -27,47 +28,30 @@ public class EmployeeController {
 	@Autowired
 	ProjectRepository departmentRepository;
 	
+	EmployeeService es = new EmployeeService();
+	RoleService rs = new RoleService();
+	
 	@RequestMapping("/createEmployee")
 	public Employee create(@RequestParam(value = "firstName", defaultValue = "User") String firstName,
 			@RequestParam(value = "lastName", defaultValue = "lastName") String lastName,
 			@RequestParam(value="emailid") String emailid,
 			@RequestParam(value = "age", defaultValue = "25") int age,
 			@RequestParam(value = "salary", defaultValue = "10000") float salary) {
-		Employee employee = new Employee();
-		employee.setFirstName(firstName);
-		employee.setLastName(lastName);
-		employee.setAge(age);
-		employee.setSalary(salary);
-		employee.setEmail(emailid);
-		employee = employeeRepository.save(employee);
-		return employee;
+		return es.addEmployee(firstName, lastName, emailid, age, salary);
 	}
 
 	@RequestMapping("/addEmployeeRole")
 	public void setEmployeeRole(@RequestParam(value="firstName") String firstName,
+						@RequestParam(value="lastName") String lastName,
 						@RequestParam(value="title") String title,
 						@RequestParam(value="description") String description){
-		Employee e;
-		e = employeeRepository.findByFirstName(firstName);
-		if (e == null){
-			return ;
-		}else{
-			
-			Role r =null;
-			r = roleRepository.findByTitle(title);
-			if (r==null){
-				r = new Role(title, description);
-			}
-			roleRepository.save(r);
-			e.setRole(r);
-			employeeRepository.save(e);			
-		}
+		es.addRoleForEmployee(firstName, lastName, rs.addRole(title, description));
 	}
 	
 	@RequestMapping("/FetchEmployee")
 	public Employee FetchEmployee(@RequestParam(value="id") long id){
 		Employee employee = null;
-		employee = employeeRepository.findById(id);
+		employee = employeeRepository.findByEmpId(id);
 		return employee;
 	}
 	
@@ -79,10 +63,11 @@ public class EmployeeController {
 	
 	@RequestMapping("/addEmployeeProject")
 	public Employee setEmployeeProject(@RequestParam(value="firstName") String firstName,
+			@RequestParam(value="lastName") String lastName,
 			@RequestParam(value="name") String projName,
 			@RequestParam(value="description") String description){
 		Employee e;
-		e = employeeRepository.findByFirstName(firstName);
+		e = employeeRepository.findByFirstNameAndLastName(firstName, lastName);
 		if (e == null){
 			return e;
 		}else{
@@ -100,9 +85,10 @@ public class EmployeeController {
 	
 	@RequestMapping("/removeRole")
 	public Employee removeEmployeeRole(@RequestParam(value="firstName") String firstName,
+					@RequestParam(value="lastName") String lastName,
 					@RequestParam(value="title") String title){
 		Employee e;
-		e = employeeRepository.findByFirstName(firstName);
+		e = employeeRepository.findByFirstNameAndLastName(firstName, lastName);
 		if (e == null){
 			return e;
 		}else{
@@ -113,9 +99,10 @@ public class EmployeeController {
 	}
 	
 	@RequestMapping("/deleteEmployee")
-	public Employee deleteEmployeeDetails(@RequestParam(value="firstName") String firstName){
+	public Employee deleteEmployeeDetails(@RequestParam(value="firstName") String firstName,
+			@RequestParam(value="lastName") String lastName){
 		Employee e;
-		e = employeeRepository.findByFirstName(firstName);
+		e = employeeRepository.findByFirstNameAndLastName(firstName, lastName);
 		employeeRepository.delete(e);
 		return null;
 	}

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="CustomerJpa/src/main/java"/>
+	<classpathentry kind="src" path="CustomerJpa/src/test/java"/>
+	<classpathentry kind="src" path="Example/src/main/java"/>
+	<classpathentry kind="src" path="Example/src/test/java"/>
+	<classpathentry kind="src" path="Example1/src/main/java"/>
+	<classpathentry kind="src" path="Example1/src/test/java"/>
+	<classpathentry kind="src" path="TestNgPractice/src/main/java"/>
+	<classpathentry kind="src" path="TestNgPractice/src/test/java"/>
+	<classpathentry kind="lib" path="CustomerJpa/.mvn/wrapper/maven-wrapper.jar"/>
+	<classpathentry kind="lib" path="Example/bin/gradle/wrapper/gradle-wrapper.jar"/>
+	<classpathentry kind="lib" path="Example/gradle/wrapper/gradle-wrapper.jar"/>
+	<classpathentry kind="lib" path="Example1/.mvn/wrapper/maven-wrapper.jar"/>
+	<classpathentry kind="lib" path="TestNgPractice/.mvn/wrapper/maven-wrapper.jar"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="output" path="bin"/>
+</classpath>
